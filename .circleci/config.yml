@@ -15,18 +15,19 @@ commands:
       - restore_cache:
           name: Restpre npm dependencies
           keys:
-            - npm-v1-{{ checksum "app/package-lock.json" }}-{{ checksum "functions/package-lock.json" }}
-            - npm-v1-{{ checksum "app/package-lock.json" }}
-            - npm-v1
+            - yarn-v1-{{ checksum "app/yarn.lock" }}-{{ checksum "functions/package-lock.json" }}
+            - yarn-v1-{{ checksum "app/yarn.lock" }}
+            - yarn-v1
   save_npm:
     steps:
       - save_cache:
           name: Cache npm dependencies
-          key: npm-v1-{{ checksum "app/package-lock.json" }}-{{ checksum "functions/package-lock.json" }}
+          key: npm-v1-{{ checksum "app/yarn.lock" }}-{{ checksum "functions/package-lock.json" }}
           paths:
             - ~/repo/node_modules
             - ~/repo/app/node_modules
             - ~/repo/functions/node_modules
+            - ~/repo/.cache/yarn
 
 jobs:
   setup:
@@ -37,7 +38,7 @@ jobs:
       - restore_npm
       - run:
           name: Install app npm dependencies
-          command: cd app && npm ci
+          command: cd app && yarn install
       - run:
           name: Install functions npm dependencies
           command: cd functions && npm ci
@@ -54,7 +55,7 @@ jobs:
       - restore_npm
       - run:
           name: generate statics
-          command: cd app && npm run build
+          command: cd app && yarn build
       - run:
           name: deploy
           command: ./node_modules/.bin/firebase deploy --only hosting --token=$FIREBASE_TOKEN
