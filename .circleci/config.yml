@@ -22,7 +22,7 @@ commands:
     steps:
       - save_cache:
           name: Cache npm dependencies
-          key: npm-v1-{{ checksum "app/yarn.lock" }}-{{ checksum "functions/package-lock.json" }}
+          key: yarn-v1-{{ checksum "app/yarn.lock" }}-{{ checksum "functions/package-lock.json" }}
           paths:
             - ~/repo/node_modules
             - ~/repo/app/node_modules
